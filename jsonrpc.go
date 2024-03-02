@@ -25,6 +25,11 @@ func (s *RPC) Register(name string, module Module) {
 		fqn := strings.Join([]string{name, methodName}, ".")
 		s.methods[fqn] = handler
 	}
+
+	for submoduleName, submodule := range module.Submodules() {
+		fqn := strings.Join([]string{name, submoduleName}, ".")
+		s.Register(fqn, submodule)
+	}
 }
 
 func (s *RPC) Call(ctx context.Context, req Request) Response {
