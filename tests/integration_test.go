@@ -19,8 +19,8 @@ func (m *EchoSubmodule) UpperCase(ctx context.Context, params jsonrpc.Params) (a
 	return strings.ToUpper(message), nil
 }
 
-func (m *EchoSubmodule) Exports() map[string]jsonrpc.Handler {
-	return map[string]jsonrpc.Handler{
+func (m *EchoSubmodule) Exports() map[string]jsonrpc.Method {
+	return map[string]jsonrpc.Method{
 		"upper_case": m.UpperCase,
 	}
 }
@@ -45,13 +45,13 @@ func (m *EchoModule) Submodules() map[string]jsonrpc.Module {
 	}
 }
 
-func (m *EchoModule) Exports() map[string]jsonrpc.Handler {
-	return map[string]jsonrpc.Handler{
+func (m *EchoModule) Exports() map[string]jsonrpc.Method {
+	return map[string]jsonrpc.Method{
 		"echo": m.Echo,
 	}
 }
 
-func TestHandlerCall(t *testing.T) {
+func TestMethodCall(t *testing.T) {
 	rpc := jsonrpc.New()
 	rpc.Register("echo", &EchoModule{})
 	req := jsonrpc.NewRequest(1, "echo.echo", jsonrpc.Params{
@@ -63,7 +63,7 @@ func TestHandlerCall(t *testing.T) {
 	assert.Equal(t, req.ID, resp.ID)
 }
 
-func TestHandlerCallUndefined(t *testing.T) {
+func TestMethodCallUndefined(t *testing.T) {
 	rpc := jsonrpc.New()
 	rpc.Register("echo", &EchoModule{})
 	req := jsonrpc.NewRequest(1, "echo.echos", jsonrpc.Params{
@@ -75,7 +75,7 @@ func TestHandlerCallUndefined(t *testing.T) {
 	assert.Equal(t, req.ID, resp.ID)
 }
 
-func TestSubmoduleHandlerCall(t *testing.T) {
+func TestSubmoduleMethodCall(t *testing.T) {
 	rpc := jsonrpc.New()
 	rpc.Register("echo", &EchoModule{})
 	req := jsonrpc.NewRequest(1, "echo.sub.upper_case", jsonrpc.Params{
