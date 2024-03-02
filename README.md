@@ -8,7 +8,7 @@
 ## Installation
 
 ```
-go get github.com/dnbsd/json-rpc
+go get github.com/dnbsd/jsonrpc
 ```
 
 ## Usage
