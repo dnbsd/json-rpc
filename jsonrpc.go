@@ -2,12 +2,7 @@ package jsonrpc
 
 import (
 	"context"
-	"errors"
 	"strings"
-)
-
-var (
-	ErrMethodNotFound = errors.New("method not found")
 )
 
 type RPC struct {

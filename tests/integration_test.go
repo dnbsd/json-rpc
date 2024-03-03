@@ -2,19 +2,20 @@ package tests
 
 import (
 	"context"
-	"errors"
 	"github.com/dnbsd/jsonrpc"
 	"github.com/stretchr/testify/assert"
 	"strings"
 	"testing"
 )
 
+var ErrEmptyMessage = jsonrpc.NewError(1, "message is empty")
+
 type EchoSubmodule struct{}
 
 func (m *EchoSubmodule) UpperCase(ctx context.Context, params jsonrpc.Params) (any, error) {
 	message := params.String("message")
 	if message == "" {
-		return nil, errors.New("empty message")
+		return nil, ErrEmptyMessage
 	}
 	return strings.ToUpper(message), nil
 }
@@ -34,7 +35,7 @@ type EchoModule struct{}
 func (m *EchoModule) Echo(ctx context.Context, params jsonrpc.Params) (any, error) {
 	message := params.String("message")
 	if message == "" {
-		return nil, errors.New("empty message")
+		return nil, ErrEmptyMessage
 	}
 	return message, nil
 }
@@ -61,6 +62,14 @@ func TestMethodCall(t *testing.T) {
 	assert.NoError(t, resp.Error)
 	assert.Equal(t, resp.Result, "hello world")
 	assert.Equal(t, req.ID, resp.ID)
+}
+
+func TestMethodCallError(t *testing.T) {
+	rpc := jsonrpc.New()
+	rpc.Register("echo", &EchoModule{})
+	req := jsonrpc.NewRequest(1, "echo.echo", jsonrpc.Params{})
+	resp := rpc.Call(context.Background(), req)
+	assert.ErrorIs(t, resp.Error, ErrEmptyMessage)
 }
 
 func TestMethodCallUndefined(t *testing.T) {
