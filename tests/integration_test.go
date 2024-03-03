@@ -59,7 +59,7 @@ func TestMethodCall(t *testing.T) {
 		"message": "hello world",
 	})
 	resp := rpc.Call(context.Background(), req)
-	assert.NoError(t, resp.Error)
+	assert.Nil(t, resp.Error)
 	assert.Equal(t, resp.Result, "hello world")
 	assert.Equal(t, req.ID, resp.ID)
 }
@@ -91,7 +91,7 @@ func TestSubmoduleMethodCall(t *testing.T) {
 		"message": "hello world",
 	})
 	resp := rpc.Call(context.Background(), req)
-	assert.NoError(t, resp.Error)
+	assert.Nil(t, resp.Error)
 	assert.Equal(t, resp.Result, "HELLO WORLD")
 	assert.Equal(t, req.ID, resp.ID)
 }
