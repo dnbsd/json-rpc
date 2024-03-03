@@ -1,10 +1,15 @@
 package jsonrpc
 
 import (
-	"fmt"
+	"errors"
 )
 
 const version = "2.0"
+
+var (
+	ErrUnsupportedVersion = errors.New("unsupported version")
+	ErrEmptyMethod        = errors.New("empty method")
+)
 
 type Request struct {
 	Version string `json:"jsonrpc"`
@@ -28,11 +33,11 @@ func (r Request) IsNotification() bool {
 
 func (r Request) Validate() error {
 	if r.Version != version {
-		return fmt.Errorf("unsupported RPC version '%s'", r.Version)
+		return ErrUnsupportedVersion
 	}
 
 	if r.Method == "" {
-		return fmt.Errorf("method was not specified")
+		return ErrEmptyMethod
 	}
 
 	return nil
