@@ -16,32 +16,59 @@ go get github.com/dnbsd/jsonrpc
 ```go
 import "github.com/dnbsd/jsonrpc"
 
-type EchoModule struct{}
+builder := jsonrpc.Builder{
+    Modules: []jsonrpc.Module{
+        {
+            Name: "math",
+            Methods: []jsonrpc.Method{
+                {
+                    Name: "version",
+                    Handler: func(c *jsonrpc.Context) (any, error) {
+                        return c.Result("v1.0")
+                    },
+                },
+                {
+                    Name: "add",
+                    Handler: func(c *jsonrpc.Context) (any, error) {
+                        params, err := c.ParamsArray()
+                        if err != nil {
+                            return c.Error(err)
+                        }
 
-func (m *EchoModule) Echo(ctx context.Context, params jsonrpc.Params) (any, error) {
-    message := params.String("message")
-    if message == "" {
-        return nil, errors.New("empty message")
-    }
-    return message, nil
+                        var sum int
+                        for i := range params {
+                            n, err := params.Number(i)
+                            if err != nil {
+                                return c.Error(err)
+                            }
+                            sum += n.Int()
+                        }
+
+                        return c.Result(sum)
+                    },
+                },
+            },
+        },
+    },
 }
 
-func (m *EchoModule) Submodules() map[string]jsonrpc.Module {
-    return nil
+service, err := builder.Build()
+if err != nil {
+    panic(err)
 }
 
-func (m *EchoModule) Exports() map[string]jsonrpc.Method {
-    return map[string]jsonrpc.Method{
-        "echo": m.Echo,
-    }
+req := jsonrpc.NewRequest(1, "math.add", jsonrpc.ParamsArray{10, 20})
+err := req.Validate()
+if err != nil {
+    panic(err)
 }
 
-rpc := jsonrpc.New()
-rpc.Register("echo", &EchoModule{})
-req := jsonrpc.NewRequest(1, "echo.echo", jsonrpc.Params{
-    "message": "hello world",
-})
-resp := rpc.Call(context.Background(), req)
+resp := service.Call(context.Background(), req)
+if resp.Error != nil {
+    panic(err)
+}
+
+println("sum", resp.Result.(int))
 ```
 
 ## License

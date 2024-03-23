@@ -3,7 +3,7 @@ package jsonrpc
 type Response struct {
 	Version string `json:"jsonrpc"`
 	ID      any    `json:"id,omitempty"`
-	Result  any    `json:"result,omitempty"`
+	Result  any    `json:"result,omitempty"` // TODO: define as a struct with helper methods (as are Params, ParamsArray)!
 	Error   *Error `json:"error,omitempty"`
 }
 

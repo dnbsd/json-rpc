@@ -1,10 +1,12 @@
 package jsonrpc
 
-import "context"
-
-type Module interface {
-	Exports() map[string]Method
-	Submodules() map[string]Module
+type Module struct {
+	Name       string
+	Methods    []Method
+	Submodules []Module
 }
 
-type Method func(context.Context, Params) (any, error)
+type Method struct {
+	Name    string
+	Handler func(*Context) (any, error)
+}
