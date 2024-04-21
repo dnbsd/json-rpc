@@ -2,6 +2,10 @@ name: Workflow
 on: [push]
 jobs:
   tests:
+    strategy:
+      fail-fast: false
+      matrix:
+        go_version: [ "1.22" ]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
