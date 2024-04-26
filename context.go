@@ -22,22 +22,22 @@ func (c *Context) Error(err error) (any, error) {
 	return nil, err
 }
 
-func (c *Context) Params() (Params, error) {
+func (c *Context) ParamsObject() (Object, error) {
 	switch v := c.params.(type) {
 	case map[string]any:
 		return v, nil
-	case Params:
+	case Object:
 		return v, nil
 	default:
 		return nil, errors.New("method parameters must be an object")
 	}
 }
 
-func (c *Context) ParamsArray() (ParamsArray, error) {
+func (c *Context) ParamsArray() (Array, error) {
 	switch v := c.params.(type) {
 	case []any:
 		return v, nil
-	case ParamsArray:
+	case Array:
 		return v, nil
 	default:
 		return nil, errors.New("method parameters must be an array")

@@ -1,15 +1,17 @@
 package jsonrpc
 
-import "strconv"
+import (
+	"strconv"
+)
 
-type Params map[string]any
+type Object map[string]any
 
-func (p Params) get(key string) (any, bool) {
+func (p Object) get(key string) (any, bool) {
 	v, ok := p[key]
 	return v, ok
 }
 
-func (p Params) Number(key string) (Number, error) {
+func (p Object) Number(key string) (Number, error) {
 	v, ok := p.get(key)
 	if !ok {
 		return Number{}, &ErrParamNotFound{
@@ -28,7 +30,7 @@ func (p Params) Number(key string) (Number, error) {
 	}, nil
 }
 
-func (p Params) String(key string) (string, error) {
+func (p Object) String(key string) (string, error) {
 	v, ok := p.get(key)
 	if !ok {
 		return "", &ErrParamNotFound{
@@ -45,7 +47,7 @@ func (p Params) String(key string) (string, error) {
 	return s, nil
 }
 
-func (p Params) Object(key string) (Params, error) {
+func (p Object) Object(key string) (Object, error) {
 	v, ok := p.get(key)
 	if !ok {
 		return nil, &ErrParamNotFound{
@@ -62,7 +64,7 @@ func (p Params) Object(key string) (Params, error) {
 	return o, nil
 }
 
-func (p Params) Array(key string) (ParamsArray, error) {
+func (p Object) Array(key string) (Array, error) {
 	v, ok := p.get(key)
 	if !ok {
 		return nil, &ErrParamNotFound{
@@ -79,7 +81,7 @@ func (p Params) Array(key string) (ParamsArray, error) {
 	return o, nil
 }
 
-func (p Params) Bool(key string) (bool, error) {
+func (p Object) Bool(key string) (bool, error) {
 	v, ok := p.get(key)
 	if !ok {
 		return false, &ErrParamNotFound{
@@ -96,17 +98,16 @@ func (p Params) Bool(key string) (bool, error) {
 	return b, nil
 }
 
-// TODO: use error in getters
-type ParamsArray []any
+type Array []any
 
-func (p ParamsArray) get(n int) (any, bool) {
+func (p Array) get(n int) (any, bool) {
 	if n >= len(p) {
 		return nil, false
 	}
 	return p[n], true
 }
 
-func (p ParamsArray) Number(n int) (Number, error) {
+func (p Array) Number(n int) (Number, error) {
 	v, ok := p.get(n)
 	if !ok {
 		return Number{}, &ErrParamArrayNotFound{
@@ -125,7 +126,7 @@ func (p ParamsArray) Number(n int) (Number, error) {
 	}, nil
 }
 
-func (p ParamsArray) String(n int) (string, error) {
+func (p Array) String(n int) (string, error) {
 	v, ok := p.get(n)
 	if !ok {
 		return "", &ErrParamArrayNotFound{
@@ -142,7 +143,7 @@ func (p ParamsArray) String(n int) (string, error) {
 	return s, nil
 }
 
-func (p ParamsArray) Object(n int) (Params, error) {
+func (p Array) Object(n int) (Object, error) {
 	v, ok := p.get(n)
 	if !ok {
 		return nil, &ErrParamArrayNotFound{
@@ -159,7 +160,7 @@ func (p ParamsArray) Object(n int) (Params, error) {
 	return o, nil
 }
 
-func (p ParamsArray) Array(n int) (ParamsArray, error) {
+func (p Array) Array(n int) (Array, error) {
 	v, ok := p.get(n)
 	if !ok {
 		return nil, &ErrParamArrayNotFound{
@@ -176,7 +177,7 @@ func (p ParamsArray) Array(n int) (ParamsArray, error) {
 	return o, nil
 }
 
-func (p ParamsArray) Bool(n int) (bool, error) {
+func (p Array) Bool(n int) (bool, error) {
 	v, ok := p.get(n)
 	if !ok {
 		return false, &ErrParamArrayNotFound{

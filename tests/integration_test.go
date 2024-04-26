@@ -18,6 +18,17 @@ func TestServiceModuleMethodCall(t *testing.T) {
 	assert.Nil(t, resp.Error)
 }
 
+func TestServiceModuleMethodCallParamsObject(t *testing.T) {
+	req, err := jsonrpc.ParseRequest([]byte(`{"jsonrpc": "2.0", "method": "std.echo", "params": { "message": "hello" }, "id": 1}`))
+	assert.NoError(t, err)
+
+	service := buildService(t)
+	resp := service.Call(context.Background(), req)
+	assert.Equal(t, float64(1), resp.ID)
+	assert.Equal(t, map[string]any{"message": "hello"}, resp.Result)
+	assert.Nil(t, resp.Error)
+}
+
 func TestServiceModuleMethodCallUndefined(t *testing.T) {
 	req, err := jsonrpc.ParseRequest([]byte(`{"jsonrpc": "2.0", "method": "std.xxx", "id": 1}`))
 	assert.NoError(t, err)
@@ -59,6 +70,24 @@ func buildService(t *testing.T) *jsonrpc.Service {
 						Name: "version",
 						Handler: func(c *jsonrpc.Context) (any, error) {
 							return 1.0, nil
+						},
+					},
+					{
+						Name: "echo",
+						Handler: func(c *jsonrpc.Context) (any, error) {
+							params, err := c.ParamsObject()
+							if err != nil {
+								return c.Error(err)
+							}
+
+							msg, err := params.String("message")
+							if err != nil {
+								return c.Error(err)
+							}
+
+							return c.Result(map[string]any{
+								"message": msg,
+							})
 						},
 					},
 				},
