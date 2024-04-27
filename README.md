@@ -58,11 +58,6 @@ if err != nil {
 }
 
 req := jsonrpc.NewRequest(1, "math.add", jsonrpc.ParamsArray{10, 20})
-err := req.Validate()
-if err != nil {
-    panic(err)
-}
-
 resp := service.Call(context.Background(), req)
 if resp.Error != nil {
     panic(err)
