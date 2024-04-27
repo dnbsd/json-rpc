@@ -39,10 +39,10 @@ type Request struct {
 	Params  any    `json:"params"`
 }
 
-func NewRequest(id any, method string, params any) Request {
+func NewRequest(method string, params any) Request {
 	return Request{
 		Version: version,
-		ID:      id,
+		ID:      NewID(),
 		Method:  method,
 		Params:  params,
 	}
