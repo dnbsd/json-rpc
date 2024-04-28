@@ -18,8 +18,33 @@ func (p Object) Number(key string) (Number, error) {
 			Key: key,
 		}
 	}
-	f, ok := v.(float64)
-	if !ok {
+	var f float64
+	switch x := v.(type) {
+	case float64:
+		f = x
+	case float32:
+		f = float64(x)
+	case int64:
+		f = float64(x)
+	case int32:
+		f = float64(x)
+	case int16:
+		f = float64(x)
+	case int8:
+		f = float64(x)
+	case int:
+		f = float64(x)
+	case uint64:
+		f = float64(x)
+	case uint32:
+		f = float64(x)
+	case uint16:
+		f = float64(x)
+	case uint8:
+		f = float64(x)
+	case uint:
+		f = float64(x)
+	default:
 		return Number{}, &ErrParamType{
 			Key:  key,
 			Type: "number",
