@@ -14,7 +14,7 @@ func (p Object) get(key string) (any, bool) {
 func (p Object) Number(key string) (Number, error) {
 	v, ok := p.get(key)
 	if !ok {
-		return Number{}, &ErrParamNotFound{
+		return Number{}, &ErrParamObjectNotFound{
 			Key: key,
 		}
 	}
@@ -45,7 +45,7 @@ func (p Object) Number(key string) (Number, error) {
 	case uint:
 		f = float64(x)
 	default:
-		return Number{}, &ErrParamType{
+		return Number{}, &ErrParamObjectType{
 			Key:  key,
 			Type: "number",
 		}
@@ -58,13 +58,13 @@ func (p Object) Number(key string) (Number, error) {
 func (p Object) String(key string) (string, error) {
 	v, ok := p.get(key)
 	if !ok {
-		return "", &ErrParamNotFound{
+		return "", &ErrParamObjectNotFound{
 			Key: key,
 		}
 	}
 	s, ok := v.(string)
 	if !ok {
-		return "", &ErrParamType{
+		return "", &ErrParamObjectType{
 			Key:  key,
 			Type: "string",
 		}
@@ -75,13 +75,13 @@ func (p Object) String(key string) (string, error) {
 func (p Object) Object(key string) (Object, error) {
 	v, ok := p.get(key)
 	if !ok {
-		return nil, &ErrParamNotFound{
+		return nil, &ErrParamObjectNotFound{
 			Key: key,
 		}
 	}
 	o, ok := v.(map[string]any)
 	if !ok {
-		return nil, &ErrParamType{
+		return nil, &ErrParamObjectType{
 			Key:  key,
 			Type: "object",
 		}
@@ -92,13 +92,13 @@ func (p Object) Object(key string) (Object, error) {
 func (p Object) Array(key string) (Array, error) {
 	v, ok := p.get(key)
 	if !ok {
-		return nil, &ErrParamNotFound{
+		return nil, &ErrParamObjectNotFound{
 			Key: key,
 		}
 	}
 	o, ok := v.([]any)
 	if !ok {
-		return nil, &ErrParamType{
+		return nil, &ErrParamObjectType{
 			Key:  key,
 			Type: "array",
 		}
@@ -109,13 +109,13 @@ func (p Object) Array(key string) (Array, error) {
 func (p Object) Bool(key string) (bool, error) {
 	v, ok := p.get(key)
 	if !ok {
-		return false, &ErrParamNotFound{
+		return false, &ErrParamObjectNotFound{
 			Key: key,
 		}
 	}
 	b, ok := v.(bool)
 	if !ok {
-		return false, &ErrParamType{
+		return false, &ErrParamObjectType{
 			Key:  key,
 			Type: "bool",
 		}
@@ -235,20 +235,20 @@ func (n Number) Float64() float64 {
 	return n.v
 }
 
-type ErrParamType struct {
+type ErrParamObjectType struct {
 	Key  string
 	Type string
 }
 
-func (p *ErrParamType) Error() string {
+func (p *ErrParamObjectType) Error() string {
 	return "parameter '" + p.Key + "' is not of type " + p.Type
 }
 
-type ErrParamNotFound struct {
+type ErrParamObjectNotFound struct {
 	Key string
 }
 
-func (p *ErrParamNotFound) Error() string {
+func (p *ErrParamObjectNotFound) Error() string {
 	return "parameter '" + p.Key + "' not found"
 }
 
