@@ -14,9 +14,7 @@ func (p Object) get(key string) (any, bool) {
 func (p Object) Number(key string) (Number, error) {
 	v, ok := p.get(key)
 	if !ok {
-		return Number{}, &ErrParamObjectNotFound{
-			Key: key,
-		}
+		return Number{}, NewErrorParamObjectNotFound(key)
 	}
 	var f float64
 	switch x := v.(type) {
@@ -45,10 +43,7 @@ func (p Object) Number(key string) (Number, error) {
 	case uint:
 		f = float64(x)
 	default:
-		return Number{}, &ErrParamObjectType{
-			Key:  key,
-			Type: "number",
-		}
+		return Number{}, NewErrorParamObjectType(key, "number")
 	}
 	return Number{
 		v: f,
@@ -58,16 +53,11 @@ func (p Object) Number(key string) (Number, error) {
 func (p Object) String(key string) (string, error) {
 	v, ok := p.get(key)
 	if !ok {
-		return "", &ErrParamObjectNotFound{
-			Key: key,
-		}
+		return "", NewErrorParamObjectNotFound(key)
 	}
 	s, ok := v.(string)
 	if !ok {
-		return "", &ErrParamObjectType{
-			Key:  key,
-			Type: "string",
-		}
+		return "", NewErrorParamObjectType(key, "string")
 	}
 	return s, nil
 }
@@ -75,16 +65,11 @@ func (p Object) String(key string) (string, error) {
 func (p Object) Object(key string) (Object, error) {
 	v, ok := p.get(key)
 	if !ok {
-		return nil, &ErrParamObjectNotFound{
-			Key: key,
-		}
+		return nil, NewErrorParamObjectNotFound(key)
 	}
 	o, ok := v.(map[string]any)
 	if !ok {
-		return nil, &ErrParamObjectType{
-			Key:  key,
-			Type: "object",
-		}
+		return nil, NewErrorParamObjectType(key, "object")
 	}
 	return o, nil
 }
@@ -92,16 +77,11 @@ func (p Object) Object(key string) (Object, error) {
 func (p Object) Array(key string) (Array, error) {
 	v, ok := p.get(key)
 	if !ok {
-		return nil, &ErrParamObjectNotFound{
-			Key: key,
-		}
+		return nil, NewErrorParamObjectNotFound(key)
 	}
 	o, ok := v.([]any)
 	if !ok {
-		return nil, &ErrParamObjectType{
-			Key:  key,
-			Type: "array",
-		}
+		return nil, NewErrorParamObjectType(key, "array")
 	}
 	return o, nil
 }
@@ -109,16 +89,11 @@ func (p Object) Array(key string) (Array, error) {
 func (p Object) Bool(key string) (bool, error) {
 	v, ok := p.get(key)
 	if !ok {
-		return false, &ErrParamObjectNotFound{
-			Key: key,
-		}
+		return false, NewErrorParamObjectNotFound(key)
 	}
 	b, ok := v.(bool)
 	if !ok {
-		return false, &ErrParamObjectType{
-			Key:  key,
-			Type: "bool",
-		}
+		return false, NewErrorParamObjectType(key, "bool")
 	}
 	return b, nil
 }
@@ -135,9 +110,7 @@ func (p Array) get(n int) (any, bool) {
 func (p Array) Number(n int) (Number, error) {
 	v, ok := p.get(n)
 	if !ok {
-		return Number{}, &ErrParamArrayNotFound{
-			Index: n,
-		}
+		return Number{}, NewErrorParamArrayNotFound(n)
 	}
 	var f float64
 	switch x := v.(type) {
@@ -166,10 +139,7 @@ func (p Array) Number(n int) (Number, error) {
 	case uint:
 		f = float64(x)
 	default:
-		return Number{}, &ErrParamArrayType{
-			Index: n,
-			Type:  "number",
-		}
+		return Number{}, NewErrorParamArrayType(n, "number")
 	}
 	return Number{
 		v: f,
@@ -179,16 +149,11 @@ func (p Array) Number(n int) (Number, error) {
 func (p Array) String(n int) (string, error) {
 	v, ok := p.get(n)
 	if !ok {
-		return "", &ErrParamArrayNotFound{
-			Index: n,
-		}
+		return "", NewErrorParamArrayNotFound(n)
 	}
 	s, ok := v.(string)
 	if !ok {
-		return "", &ErrParamArrayType{
-			Index: n,
-			Type:  "string",
-		}
+		return "", NewErrorParamArrayType(n, "string")
 	}
 	return s, nil
 }
@@ -196,16 +161,11 @@ func (p Array) String(n int) (string, error) {
 func (p Array) Object(n int) (Object, error) {
 	v, ok := p.get(n)
 	if !ok {
-		return nil, &ErrParamArrayNotFound{
-			Index: n,
-		}
+		return nil, NewErrorParamArrayNotFound(n)
 	}
 	o, ok := v.(map[string]any)
 	if !ok {
-		return nil, &ErrParamArrayType{
-			Index: n,
-			Type:  "object",
-		}
+		return nil, NewErrorParamArrayType(n, "object")
 	}
 	return o, nil
 }
@@ -213,16 +173,11 @@ func (p Array) Object(n int) (Object, error) {
 func (p Array) Array(n int) (Array, error) {
 	v, ok := p.get(n)
 	if !ok {
-		return nil, &ErrParamArrayNotFound{
-			Index: n,
-		}
+		return nil, NewErrorParamArrayNotFound(n)
 	}
 	o, ok := v.([]any)
 	if !ok {
-		return nil, &ErrParamArrayType{
-			Index: n,
-			Type:  "array",
-		}
+		return nil, NewErrorParamArrayType(n, "array")
 	}
 	return o, nil
 }
@@ -230,16 +185,11 @@ func (p Array) Array(n int) (Array, error) {
 func (p Array) Bool(n int) (bool, error) {
 	v, ok := p.get(n)
 	if !ok {
-		return false, &ErrParamArrayNotFound{
-			Index: n,
-		}
+		return false, NewErrorParamArrayNotFound(n)
 	}
 	b, ok := v.(bool)
 	if !ok {
-		return false, &ErrParamArrayType{
-			Index: n,
-			Type:  "boolean",
-		}
+		return false, NewErrorParamArrayType(n, "boolean")
 	}
 	return b, nil
 }
@@ -260,38 +210,32 @@ func (n Number) Float64() float64 {
 	return n.v
 }
 
-type ErrParamObjectType struct {
-	Key  string
-	Type string
+func NewErrorParamObjectType(key, ttype string) *Error {
+	code := 400001
+	message := "parameter '" + key + "' is not of type " + ttype
+	return NewError(code, message)
 }
 
-func (p *ErrParamObjectType) Error() string {
-	return "parameter '" + p.Key + "' is not of type " + p.Type
+func NewErrorParamObjectNotFound(key string) *Error {
+	code := 400002
+	message := "parameter '" + key + "' not found"
+	return NewError(code, message)
 }
 
-type ErrParamObjectNotFound struct {
-	Key string
-}
-
-func (p *ErrParamObjectNotFound) Error() string {
-	return "parameter '" + p.Key + "' not found"
-}
-
-type ErrParamArrayType struct {
-	Index int
-	Type  string
-}
-
-func (p *ErrParamArrayType) Error() string {
-	index := strconv.FormatInt(int64(p.Index), 10)
-	return "parameter at position " + index + " is not of type " + p.Type
+func NewErrorParamArrayType(n int, ttype string) *Error {
+	code := 400003
+	index := strconv.FormatInt(int64(n), 10)
+	message := "parameter at position " + index + " is not of type " + ttype
+	return NewError(code, message)
 }
 
 type ErrParamArrayNotFound struct {
 	Index int
 }
 
-func (p *ErrParamArrayNotFound) Error() string {
-	index := strconv.FormatInt(int64(p.Index), 10)
-	return "parameter '" + index + "' not found"
+func NewErrorParamArrayNotFound(n int) *Error {
+	code := 400004
+	index := strconv.FormatInt(int64(n), 10)
+	message := "parameter '" + index + "' not found"
+	return NewError(code, message)
 }
