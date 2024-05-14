@@ -239,3 +239,16 @@ func NewErrorParamArrayNotFound(n int) *Error {
 	message := "parameter '" + index + "' not found"
 	return NewError(code, message)
 }
+
+func NewErrorParamObjectValue(key string, message string) *Error {
+	code := 400005
+	message = "parameter '" + key + "' contains invalid value: " + message
+	return NewError(code, message)
+}
+
+func NewErrorParamArrayValue(n int, message string) *Error {
+	code := 400006
+	index := strconv.FormatInt(int64(n), 10)
+	message = "parameter '" + index + "' contains invalid value: " + message
+	return NewError(code, message)
+}
